@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.enjay.roomretrofitpractice.APIModels.AllPhotosModel
 import com.enjay.roomretrofitpractice.APIModels.Result
+import com.enjay.roomretrofitpractice.APIModels.SearchedPhoto
 import com.enjay.roomretrofitpractice.APIModels.Urls
 import com.enjay.roomretrofitpractice.hiltPratice.PhotoViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,12 +28,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         CoroutineScope(Dispatchers.Main).launch {
-            viewModel.getSearchedPhoto("dog").enqueue(object : retrofit2.Callback<Result>{
-                override fun onResponse(call: Call<Result>, response: Response<Result>) {
-                    Log.e("Dhaval", "onResponse: ${response.body()?.urls}", )
+            viewModel.getSearchedPhoto("dog").enqueue(object : retrofit2.Callback<SearchedPhoto>{
+                override fun onResponse(call: Call<SearchedPhoto>, response: Response<SearchedPhoto>) {
+                    response.body()?.results?.forEachIndexed { index, result ->
+                        Log.e("Dhaval", "searched image index $index --> ${result.urls.raw}", )
+                    }
                 }
 
-                override fun onFailure(call: Call<Result>, t: Throwable) {
+                override fun onFailure(call: Call<SearchedPhoto>, t: Throwable) {
 
                 }
 
