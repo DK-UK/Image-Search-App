@@ -3,8 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_wallpaper.xml" value="0.185" />
         <entry key="app/src/main/res/drawable/photo_gradient.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/photo_item.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/full_screen_image_dialog.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/photo_item.xml" value="0.33" />
+        <entry key="app/src/main/res/menu/photo_menu.xml" value="0.17552083333333332" />
+        <entry key="app/src/main/res/xml/provider_paths.xml" value="0.1765625" />
       </map>
     </option>
   </component>

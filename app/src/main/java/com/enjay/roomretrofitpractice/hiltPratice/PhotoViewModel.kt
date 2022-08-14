@@ -15,16 +15,16 @@ import javax.inject.Inject
 @HiltViewModel
 class PhotoViewModel @Inject constructor(private val repository: PhotoRepository) : ViewModel() {
 
-    suspend fun getSearchedPhoto(searchedStr : String) : Call<SearchedPhoto> {
+    suspend fun getSearchedPhoto(searchedStr: String, pageCount: Int) : Call<SearchedPhoto> {
         val deffered = viewModelScope.async {
-            repository.searchPhoto(searchedStr)
+            repository.searchPhoto(searchedStr, pageCount)
         }
         return deffered.await()
     }
 
-    suspend fun getAllPhotos() : Call<AllPhotosModel> {
+    suspend fun getAllPhotos(page : Int) : Call<AllPhotosModel> {
         val deffered = viewModelScope.async {
-            repository.getAllPhotos()
+            repository.getAllPhotos(page)
         }
         return deffered.await()
     }

@@ -10,12 +10,12 @@ import javax.inject.Inject
 
 class PhotoRepository @Inject constructor(private val apiInterface: APIInterface, private val clientKey : String) {
 
-    suspend fun searchPhoto(searchStr : String) : Call<SearchedPhoto> {
-        return apiInterface.searchPhoto(searchStr, clientKey)
+    suspend fun searchPhoto(searchStr : String, pageCount : Int) : Call<SearchedPhoto> {
+        return apiInterface.searchPhoto(search = searchStr, client_key = clientKey, page = pageCount)
     }
 
-    suspend fun getAllPhotos() : Call<AllPhotosModel> {
+    suspend fun getAllPhotos(page : Int) : Call<AllPhotosModel> {
         Log.e("Dhaval", "getAllPhotos: CLIENT KEY : $clientKey", )
-        return apiInterface.getAllPhotos(clientKey)
+        return apiInterface.getAllPhotos(client_key = clientKey, page = page)
     }
 }
