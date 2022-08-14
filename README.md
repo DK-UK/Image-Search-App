@@ -5,7 +5,7 @@
 * [General Info](#general-information)
 * [Technologies Used](#technologies-used)
 * [Features](#features)
-* [Screenshots and Videos](#screenshots)
+* [Screenshots and Videos](#screenshots-and-Videos)
 
 
 ## General Information
