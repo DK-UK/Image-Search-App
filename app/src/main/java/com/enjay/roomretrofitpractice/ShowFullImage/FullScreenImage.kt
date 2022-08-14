@@ -15,9 +15,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.view.ViewGroup
 
 import android.view.Gravity
-
-
-
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import com.enjay.roomretrofitpractice.Singleton.ScreenSize
 
 
 class FullScreenImage(val activity: Activity) {
@@ -39,6 +39,14 @@ class FullScreenImage(val activity: Activity) {
         val view = LayoutInflater.from(activity).inflate(R.layout.full_screen_image_dialog, null)
         val imgViewFullScreen = view.findViewById(R.id.imgview_full_screen_img) as ImageView
         val fabClose = view.findViewById(R.id.fab_close) as FloatingActionButton
+        val fullImageLinear = view.findViewById(R.id.linear_full_screen_img) as LinearLayout
+
+        val width = ScreenSize.getScreenWidth(activity)
+        val height = ScreenSize.getScreenHeight(activity)
+
+        val params = RelativeLayout.LayoutParams((width - 100), (height - 300))
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, 1)
+        fullImageLinear.layoutParams = params
 
         Glide.with(activity).
         load(urlString)

@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
-
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
@@ -23,9 +22,14 @@
         android:theme="@style/Theme.RoomRetrofitPractice"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity2"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:name=".SplashScreen"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <provider
@@ -41,11 +45,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
     </application>
 

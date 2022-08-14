@@ -7,9 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -19,6 +17,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.enjay.roomretrofitpractice.APIModels.AllPhotosModel
 import com.enjay.roomretrofitpractice.APIModels.SearchedPhoto
 import com.enjay.roomretrofitpractice.APIModels.Urls
+import com.enjay.roomretrofitpractice.Singleton.ScreenSize
 import com.enjay.roomretrofitpractice.hiltPratice.PhotoViewModel
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +36,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: PhotoAdapter
     private var arrayList: ArrayList<Urls> = arrayListOf()
     private lateinit var progressBar: ProgressBar
+    private lateinit var progressBarMain : ProgressBar
     private lateinit var noConnectionLinear : LinearLayout
+    private lateinit var txtNoResultFound : TextView
     private lateinit var btnRetry : MaterialButton
     private var pageCount: Int = 1
     private var searchedText: String = ""
@@ -48,8 +49,17 @@ class MainActivity : AppCompatActivity() {
 
         photoRecyclerView = findViewById(R.id.photo_recycler)
         progressBar = findViewById(R.id.progress_bar)
+        progressBarMain = findViewById(R.id.progress_bar_main)
         noConnectionLinear = findViewById(R.id.img_no_connection_linear)
+        txtNoResultFound = findViewById(R.id.txt_no_result_found)
         btnRetry = findViewById(R.id.btn_retry)
+
+        val width = ScreenSize.getScreenWidth(this)
+        val height = ScreenSize.getScreenHeight(this)
+
+        val params = RelativeLayout.LayoutParams((width - 250), (height/2 - 100))
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, 1)
+        noConnectionLinear.layoutParams = params
 
         photoRecyclerView.setHasFixedSize(true)
         photoRecyclerView.layoutManager =
@@ -76,6 +86,10 @@ class MainActivity : AppCompatActivity() {
         })
 
         btnRetry.setOnClickListener {
+
+            progressBarMain.visibility = View.VISIBLE
+            noConnectionLinear.visibility = View.GONE
+
             if (searchedText.isNotEmpty()){
                 searchPhoto(searchedText)
             }
@@ -89,13 +103,18 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
 
             if (isNetworkAvailable(applicationContext)) {
+
+
                 val allPhotos = viewModel.getAllPhotos(pageCount)
                 allPhotos.enqueue(object : retrofit2.Callback<AllPhotosModel> {
                     override fun onResponse(
                         call: Call<AllPhotosModel>,
                         response: Response<AllPhotosModel>
                     ) {
+
+                        Log.e("Dhaval", "onResponse: ${response} ---> ${response.body()}", )
                         if (response.isSuccessful) {
+                            progressBarMain.visibility = View.GONE
                             photoRecyclerView.visibility = View.VISIBLE
                             noConnectionLinear.visibility = View.GONE
 
@@ -118,6 +137,7 @@ class MainActivity : AppCompatActivity() {
                 photoRecyclerView.visibility = View.GONE
                 noConnectionLinear.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
+                progressBarMain.visibility = View.GONE
             }
         }
     }
@@ -127,28 +147,40 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
 
             if (isNetworkAvailable(applicationContext)) {
+
                 viewModel.getSearchedPhoto(searchedText, pageCount)
                     .enqueue(object : retrofit2.Callback<SearchedPhoto> {
                         override fun onResponse(
                             call: Call<SearchedPhoto>,
                             response: Response<SearchedPhoto>
                         ) {
-                            if (response.isSuccessful) {
-                                photoRecyclerView.visibility = View.VISIBLE
-                                noConnectionLinear.visibility = View.GONE
 
-                                Log.e("Dhaval", "onResponse: request : ${call.request()}")
-                                response.body()?.results?.forEachIndexed { index, result ->
+                            Log.e("Dhaval", "onResponse: ${response} ---> ${response.body()}", )
 
-                                    Log.e(
-                                        "Dhaval",
-                                        "onResponse: index : $index --> ${result.urls.regular}"
-                                    )
-                                    arrayList.add(result.urls)
+                            if (!response.body()!!.results.isEmpty()) {
+                                if (response.isSuccessful) {
+                                    progressBarMain.visibility = View.GONE
+                                    photoRecyclerView.visibility = View.VISIBLE
+                                    noConnectionLinear.visibility = View.GONE
+
+                                    Log.e("Dhaval", "onResponse: request : ${call.request()}")
+                                    response.body()?.results?.forEachIndexed { index, result ->
+
+                                        Log.e(
+                                            "Dhaval",
+                                            "onResponse: index : $index --> ${result.urls.regular}"
+                                        )
+                                        arrayList.add(result.urls)
+                                    }
+                                    progressBar.visibility = View.GONE
+                                    adapter.notifyDataSetChanged()
+                                    pageCount++
                                 }
-                                progressBar.visibility = View.GONE
-                                adapter.notifyDataSetChanged()
-                                pageCount++
+                            }
+                            else{
+                                noConnectionLinear.visibility = View.VISIBLE
+                                txtNoResultFound.visibility = View.VISIBLE
+                                btnRetry.visibility = View.GONE
                             }
                         }
 
@@ -162,6 +194,7 @@ class MainActivity : AppCompatActivity() {
                 photoRecyclerView.visibility = View.GONE
                 noConnectionLinear.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
+                progressBarMain.visibility = View.GONE
             }
         }
     }

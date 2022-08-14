@@ -1,5 +1,6 @@
 package com.enjay.roomretrofitpractice.hiltPratice
 
+import com.enjay.roomretrofitpractice.BuildConfig
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -30,5 +31,5 @@ object MyModule {
 
     @Provides
     @Singleton
-    fun provideClientKey() = "vjkMrtHpLSZqHbDsKsww1xChrOQS_DtNoeK7Wezh2GI"
+    fun provideClientKey() = BuildConfig.API_KEY
 }
