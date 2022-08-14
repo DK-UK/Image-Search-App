@@ -17,6 +17,7 @@
 - Tech 1 - Android Studio
 - Tech 2 - kotlin 
 - Tech 3 - Retrofit network library (Unsplash)
+- Tech 4 - Glide image loading framework
 - Tech 4 - Coroutines
 - Tech 5 - Hilt (dependency Injection framework)
 - Tech 6 - MVVM architecture pattern 
